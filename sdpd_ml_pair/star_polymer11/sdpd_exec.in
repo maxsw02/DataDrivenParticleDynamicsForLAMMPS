@@ -1,0 +1,43 @@
+variable        h equal 4.75      # pairstyle cutoff determined during ML training   
+variable        dt equal 0.025  # timestep
+variable 	eq_steps equal 9600
+units lj              # Lennard-Jones units (dimensionless)
+atom_style sph     # Basic atomic style for particles
+dimension 3           # 3D simulation
+boundary p p p        # Periodic boundaries in all directions
+
+
+newton on
+read_data atoms_mod.data
+
+
+compute          ent all property/atom entropy
+compute          dent all property/atom dentropy
+compute          entropy all reduce sum c_ent
+compute mom all momentum
+
+variable natoms equal atoms
+pair_style      sdpd/ml 1852
+pair_coeff      * * ${h} sdpd_jit_rand.pt sdpd_jit_w.pt
+#pair_coeff      * * ${h} sdpd_jit_sto_diff.pt sdpd_jit_w.pt
+fix              1 all sph/sdpd
+
+timestep         ${dt}
+
+comm_modify  vel yes #communicate velocities
+thermo 10
+thermo_style  custom step temp pe ke etotal press c_entropy c_mom[1] c_mom[2] c_mom[3]
+dump    f       all custom 5 output_1n_f4.xyz id x y z xu yu zu vx vy vz c_ent c_dent
+run 400
+undump f
+
+run             ${eq_steps}
+
+
+dump    1       all custom 5 output_1n.xyz id x y z xu yu zu vx vy vz c_ent c_dent
+dump_modify 1 sort id
+
+
+run  1000
+
+undump 1

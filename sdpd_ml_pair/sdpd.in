@@ -1,0 +1,52 @@
+variable	scaling equal 200.
+variable        h equal 0.3       # kernel function cutoff    micrometers
+variable        mass equal 1.
+variable        dt equal 0.001           # timestep                  microseconds
+variable	s_per equal -0.1
+variable 	nparticles equal 2000
+variable 	kb equal 1. 
+variable        L equal v_nparticles/v_scaling 
+
+variable	L_scale equal 0.3
+
+atom_modify sort 100 1.0
+
+units lj              # Lennard-Jones units (dimensionless)
+atom_style sph     # Basic atomic style for particles
+dimension 3           # 3D simulation
+boundary p p p        # Periodic boundaries in all directions
+
+# Create simulation box
+region box block 0 ${L} 0 ${L} 0 ${L}   # Define the box size (adjust as needed)
+create_box 1 box                  # Create the simulation box for 1 atom type
+
+# Generate random particles
+create_atoms 1 random ${nparticles} 12345 box  # Create random distribution of particles
+
+mass            * ${mass}
+variable tempe equal  v_kb*v_mass/3
+
+velocity all create ${tempe} 4928 dist gaussian
+
+set 		region box sph/entropy ${s_per}
+variable natoms equal atoms
+
+pair_style      sdpd/ml
+#pair_coeff      * * ${h} ../../params_lammps.pt
+pair_coeff      * * ${h} params_jit.pt
+
+
+fix              1 all sph/sdpd
+neighbor 1.0 bin
+neigh_modify delay 5 every 1
+
+timestep         ${dt}
+comm_modify vel yes
+thermo 100
+
+#thermo_style    custom step v_tot_entropy etotal 
+
+#dump             dump_id all yaml 50 dump.yaml id type x y z vx vy vz
+#dump_modify      dump_id thermo yes
+
+run             5000

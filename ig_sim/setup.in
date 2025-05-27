@@ -1,0 +1,16 @@
+#This LAMMPS input file generates an initial configuration and velocities for star polymer 11 dataset.
+#
+variable        scaling equal 500 #particle number density at which your model is trained on
+variable        nparticles equal 1000
+variable        L equal (v_nparticles/v_scaling)^(1./3.)
+variable mass equal 1
+units lj              
+atom_style sph     
+dimension 3           
+boundary p p p       
+region box block 0 ${L} 0 ${L} 0 ${L}  
+create_box 1 box                  
+create_atoms 1 random ${nparticles} 12345 box #This needs to reflect minimum distance between particles from training set
+mass            * ${mass} 
+velocity        all create 5. 64286 loop local dist gaussian #defined from training simulations:
+write_data      pre_entropy.data

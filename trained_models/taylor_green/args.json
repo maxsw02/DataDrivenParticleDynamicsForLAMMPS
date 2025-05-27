@@ -1,0 +1,30 @@
+{
+    "train": true,
+    "export": true,
+    "gpu": true,
+    "dset_train": "taylor_green",
+    "dset_test": [
+        "self_diffusion",
+        "shear_flow",
+        "taylor_green"
+    ],
+    "dt": 0.0005,
+    "h": 0.2,
+    "boxsize": 1.0,
+    "n_hidden": 2,
+    "dim_hidden": 50,
+    "m": 1.0,
+    "k_B": 1.0,
+    "seed": 1,
+    "lr1": 0.001,
+    "lr2": 0.01,
+    "batch_size": 5,
+    "shuffle": true,
+    "max_epoch": 3000,
+    "miles": [
+        1000,
+        2000
+    ],
+    "gamma": 0.1,
+    "N_train": 300
+}

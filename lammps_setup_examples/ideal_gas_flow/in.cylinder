@@ -1,0 +1,39 @@
+# flow around cylinder
+units		lj
+variable       ndim  index 3
+variable 	cutoff equal 0.2
+timestep        0.0005
+dimension       ${ndim}
+atom_style      sph
+variable a equal 0.5
+comm_modify	vel yes
+
+read_data ig_flow_entropy.data
+
+region		cylinder_reg cylinder z 1. 1. ${a} INF INF units box side in
+region		out_cylinder cylinder z 1. 1. 0.55 INF INF units box side out
+
+group   group_fluid region out_cylinder
+group	solid region cylinder_reg
+
+
+pair_style hybrid/overlay sdpd/ml 384038 soft 0.05
+pair_coeff      * * sdpd/ml ${cutoff} params_jit.pt params_W_jit.pt
+pair_coeff	2 1 soft 10.0 
+fix              1 all sph/sdpd
+
+variable     fy atom mass*7.5
+fix          body_force group_fluid addforce 0.0 v_fy 0.0
+fix          fcyl solid setforce 0.0 0.0 0.0
+
+compute          ent all property/atom entropy
+compute          dent all property/atom dentropy
+compute          entropy all reduce sum c_ent
+
+thermo 10
+thermo_style  custom step temp pe ke etotal press c_entropy 
+dump    f     all custom 2 output_1n_f4.xyz id type x y z xu yu zu vx vy vz c_ent c_dent
+
+run 2000
+
+
