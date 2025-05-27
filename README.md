@@ -91,15 +91,37 @@ if using plain Python and `pip`.
 ### Generating LAMMPS Input Files
 
 ```
-python generate_input_files.py
+python main_compile.py --lammps ../lammps_sdpd_rand_only/jit_opt_build/lmp --lammps_setup lammps_setup_examples/ideal_gas_box/setup.in --lammps_sim_dir ig_sim --lmp_setup_data ig_init.data --lmp_entropy_data ig_entropy.data --metadata trained_models/taylor_green/args.json --params ../DataDrivenParticleDynamics/data/taylor_green/
 ```
+`main_compile.py` will take an existing `params.pt` that the user has already trained and compile it into three seperate JIT PyTorch models that can be used within LAMMPS. It produces 
+'model_jit_s.pt', `model_jit_w.pt`, and `model_jit.pt`, which are used to calculate the entropies, volumes, and the forces + dS, respectively. It will also generate a LAMMPS simulation directory containing a LAMMPS data file with the initial per-particle entropies calculated based on the user's LAMMPS setup file, three JIT models, `sdpd_exec.in`, which is a LAMMPS input script with the timestep and cutoff defined during the training of the model. The arguments for `main_compile.py` are as follows:
 
-This step uses model_jit_s.pt to calculate the initial entropies of each particle based on its initial positions and velocities before running LAMMPS. It also generates a input LAMMPS data file, `atoms_mod.data`, with the corresponding initial entropies, and lammps_input file, `sdpd_exec.in`. If you changed thenames of pytorch models, then change the appropriate lines in the sdpd_exec.in file.
+|     Argument              |             Description                                                            | Options                                               |
+|---------------------------| -----------------------------------------------------------------------------------|------------------------------------------------------ |
+| `--lammps`                | Location of LAMMPS binary                                                          | /path/to/lammps/binary                                |
+| `--lammps_setup`          | LAMMPS file generates initial parameters                                           | /path/to/lammps/input                                 | 
+| `--lammps_sim_dir`        | LAMMPS folder to perform simulations with sdpd/ml pair style                       | /path/to/directory/                                   |
+| `--lmp_setup_data`        | Name of LAMMPS data file that is produced by the `--lammps_setup` input file       | name of LAMMPS data file                              |
+| `--lmp_entropy_data`      | Name of LAMMPS data file after the entropy calculation is performed                | name of LAMMPS data file                              |
+| `--metadata`              | Location of the metadata of the training parameters                                | /path/to/metadata                                     |
+| `--params`                | Location of trained PyTorch model that will be JIT compiled                        | /path/to/params.pt                                    |    
 
-Within `sdpd_exec.in` produced by `generate_input_files.py` , the initial density, distribution of the initial velocities, interaction cutoff, and timestep should match that of the training data. The current `sdpd_exec.in` file is meant for the star_polymer_11 dataset.
+Guidelines to remember:
+
+Within your `--lmp_setup_data`, the user should generate initial configuration that is representative of your model's training data. For example, the initial velocities created should reflect that of the training data.
+
+Make sure to use the SPH pairstyle, but please know that the column formatting in the LAMMPS data files is altered after patching with LAMMPS with `sdpd/ml` pair style because of the additional per-particle entropy. This is the current column formatting: 
+
+
 
 ## LAMMPS
 ```
 pair_style	sdpd/ml <random_seed>
-pair_coeff	* * <cutoff> <torch_modelW>.pt <torch_model>.pt
+pair_coeff	* * <cutoff> model_jit_W.pt model_jit.pt
 ```
+If you use `main_compile.py`, then the `<cutoff>` is already defined by your training metadata and `<random_seed>` is generated using `numpy`.
+
+## Full tutorial 
+
+To see a full walkthrough of training a model, compiling LAMMPS with `sdpd/ml` pairstyle, running LAMMPS with a trained model, check out the following link:
+https://colab.research.google.com/drive/1ZKeimm3Eeo_fF9WrPkzcCnFEj55xhkce?usp=sharing

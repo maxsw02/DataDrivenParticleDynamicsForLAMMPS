@@ -25,7 +25,7 @@ def main(args):
     os.system("{} -in {} > {}".format(args.lammps, args.lammps_setup, lammps_log_init_config_file))
     os.remove("log.lammps")
     print("LAMMPS is finished generating pre-entropy data file")
-    os.system("mv pre_entropy.data {}".format(lammps_data_file_pre_entropy))
+    #os.system("mv pre_entropy.data {}".format(lammps_data_file_pre_entropy))
 
     #Save jitted models to LAMMPS simulation directory
     jit_model =JITCompile(metadata,args.params, lammps_path,args.dims)
@@ -52,7 +52,7 @@ if __name__ == "__main__":
     parser.add_argument('--lammps', default=' mpirun -np 4 /home/max/Desktop/LAMMPS/src/lmp_mpi ', type=str, help='LAMMPS executable') #LAMMPS executable 
     parser.add_argument('--lammps_setup', default='setup.in', type=str, help='LAMMPS setup script') #Generate initial conditions/geometry write a data file with positions and velocities
     parser.add_argument('--lammps_sim_dir', default='lmp_sim', type=str, help='LAMMPS simulation directory')
-    parser.add_argument('--lmp_setup_data', default='lmp_setup.data', type=str, help='name of LAMMPS data file of user defined initial conditions') #This will be produced by this executable
+    parser.add_argument('--lmp_setup_data', default='pre_entropy.data', type=str, help='name of LAMMPS data file of user defined initial conditions') #This will be produced by this executable
     parser.add_argument('--lmp_entropy_data', default='lmp_entropy.data', type=str, help='name of LAMMPS data file of user defined initial conditions with calculated entropies')#This will be produced by this executable
     parser.add_argument('--lmp_custom_input', default=None, type=str, help='If user wants to run the simulaton with a their own LAMMPS parameters, then sdpd_exec.in file will not be generated')#This will be produced by this executable
 
