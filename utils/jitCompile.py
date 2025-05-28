@@ -34,7 +34,6 @@ class JITCompile(object):
 
         # Net Parameters
         self.model = CG_model(args, self.dims).to(self.device).float()
-        load_dir = os.path.join(self.data_dir, 'params.pt')
         checkpoint = torch.load(load_dir, map_location=self.device, weights_only=False)
         self.model.load_state_dict(checkpoint)
 
