@@ -108,6 +108,12 @@ python main_compile.py --lammps /path/to/lammps/executable --lammps_setup /path/
 | `--metadata`                  | Location of the metadata of the training parameters                                                    | /path/to/metadata                                     |
 | `--params`                    | Location of trained PyTorch model that will be JIT compiled                                            | /path/to/params.pt                                    |    
 
+
+As an example, the following command can be used to generate the `sp11_sim` directory:
+```
+python main_compile.py --lammps /path/to/lmp/executable --lammps_setup lammps_setup_examples/lammps_star_polymer11/sp11_setup.in --lammps_sim_dir sp11_sim --lmp_setup_data pre_entropy.data --lmp_entropy_data sp11_entropy.data --metadata trained_models/star_polymer_11/args.json --params training_data/star_polymer_11/params.pt
+```
+
 ### Guidelines to remember:
 
 Within your `--lmp_setup_data`, the user should generate initial configuration that is representative of your model's training data. For example, the initial velocities created should reflect that of the training data.
