@@ -3,7 +3,7 @@ This LAMMPS pair style allows you to use structure-preserving machine-learned fr
 ## Pre-requisites
 PyTorch or LibTorch == 2.2
 
-Libtorch an be downloaded here: https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.2.0%2Bcpu.zip (Preferred method)
+Libtorch an be downloaded here: https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.1.2%2Bcpu.zip (Preferred method)
 
 Pytorch 2.2 can be installed using pip/conda: https://pytorch.org/get-started/previous-versions/
 
