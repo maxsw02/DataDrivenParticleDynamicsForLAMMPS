@@ -98,21 +98,24 @@ python main_compile.py --lammps ../lammps_sdpd_rand_only/jit_opt_build/lmp --lam
 `main_compile.py` will take an existing `params.pt` that the user has already trained and compile it into three seperate JIT PyTorch models that can be used within LAMMPS. It produces 
 'model_jit_s.pt', `model_jit_w.pt`, and `model_jit.pt`, which are used to calculate the entropies, volumes, and the forces + dS, respectively. It will also generate a LAMMPS simulation directory containing a LAMMPS data file with the initial per-particle entropies calculated based on the user's LAMMPS setup file, three JIT models, `sdpd_exec.in`, which is a LAMMPS input script with the timestep and cutoff defined during the training of the model. The arguments for `main_compile.py` are as follows:
 
-|     Argument              |             Description                                                            | Options                                               |
-|---------------------------| -----------------------------------------------------------------------------------|------------------------------------------------------ |
-| `--lammps`                | Location of LAMMPS binary                                                          | /path/to/lammps/binary                                |
-| `--lammps_setup`          | LAMMPS file generates initial parameters                                           | /path/to/lammps/input                                 | 
-| `--lammps_sim_dir`        | LAMMPS folder to perform simulations with sdpd/ml pair style                       | /path/to/directory/                                   |
-| `--lmp_setup_data`        | Name of LAMMPS data file that is produced by the `--lammps_setup` input file       | name of LAMMPS data file                              |
-| `--lmp_entropy_data`      | Name of LAMMPS data file after the entropy calculation is performed                | name of LAMMPS data file                              |
-| `--metadata`              | Location of the metadata of the training parameters                                | /path/to/metadata                                     |
-| `--params`                | Location of trained PyTorch model that will be JIT compiled                        | /path/to/params.pt                                    |    
+|     Argument                  |             Description                                                                                | Options                                               |
+|-------------------------------| -------------------------------------------------------------------------------------------------------|------------------------------------------------------ |
+| `--lammps`                    | Location of LAMMPS binary                                                                              | /path/to/lammps/binary                                |
+| `--lammps_setup`              | LAMMPS file generates initial parameters                                                               | /path/to/lammps/input                                 | 
+| `--lammps_sim_dir`            | LAMMPS folder to perform simulations with sdpd/ml pair style; will be made unless it exists            | /path/to/directory/                                   |
+| `--lmp_setup_data`            | Name of LAMMPS data file that is produced by the `--lammps_setup` input file                           | name of LAMMPS data file                              |
+| `--lmp_entropy_data`          | Name of LAMMPS data file after the entropy calculation is performed                                    | name of LAMMPS data file                              |
+| `--metadata`                  | Location of the metadata of the training parameters                                                    | /path/to/metadata                                     |
+| `--params`                    | Location of trained PyTorch model that will be JIT compiled                                            | /path/to/params.pt                                    |    
 
 Guidelines to remember:
 
 Within your `--lmp_setup_data`, the user should generate initial configuration that is representative of your model's training data. For example, the initial velocities created should reflect that of the training data.
 
 Make sure to use the SPH pairstyle, but please know that the column formatting in the LAMMPS data files is altered after patching with LAMMPS with `sdpd/ml` pair style because of the additional per-particle entropy. This is the current column formatting: 
+```
+atom-id atom-type rho esph cv entropy x y z ix iy iz
+```
 
 
 
