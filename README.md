@@ -120,8 +120,7 @@ atom-id atom-type rho esph cv entropy x y z ix iy iz
 ```
 pip install torch==2.5.0 --index-url https://download.pytorch.org/whl/cpu
 pip install torch_geometric torch_scatter -f https://data.pyg.org/whl/torch-2.5.0+cpu.html
-
-pip install tidynamics MDAnalysis matplotlib
+pip install MDAnalysis
 ```
 
 
