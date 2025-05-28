@@ -1,17 +1,17 @@
 This LAMMPS pair style allows you to use structure-preserving machine-learned framework for coarse-grained simulations.
 
 ## Pre-requisites
-PyTorch or LibTorch == 2.1.2
+PyTorch or LibTorch == 2.5.0
 
-Libtorch an be downloaded here: https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.1.2%2Bcpu.zip (Preferred method)
+Libtorch an be downloaded here: https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.5.0%2Bcpu.zip (Preferred method)
 
-Pytorch 2.2 can be installed using pip/conda: https://pytorch.org/get-started/previous-versions/
+Pytorch 2.5.0 can be installed using pip/conda: https://pytorch.org/get-started/previous-versions/
 
 MKL Package
-``` 
-conda install conda-forge::mkl
 ```
-Can be installed using pip as well.
+pip install mkl-include
+```
+Can be installed using conda as well.
 
 Other packages/modules loaded/used:
 gcc-9
@@ -108,7 +108,7 @@ python main_compile.py --lammps /path/to/lammps/executable --lammps_setup /path/
 | `--metadata`                  | Location of the metadata of the training parameters                                                    | /path/to/metadata                                     |
 | `--params`                    | Location of trained PyTorch model that will be JIT compiled                                            | /path/to/params.pt                                    |    
 
-Guidelines to remember:
+###Guidelines to remember:
 
 Within your `--lmp_setup_data`, the user should generate initial configuration that is representative of your model's training data. For example, the initial velocities created should reflect that of the training data.
 
@@ -116,7 +116,12 @@ Make sure to use the SPH pairstyle, but please know that the column formatting i
 ```
 atom-id atom-type rho esph cv entropy x y z ix iy iz
 ```
-
+###Dependencies:
+```
+pip install torch==2.5.0 --index-url https://download.pytorch.org/whl/cpu
+pip install torch_geometric torch_scatter -f https://data.pyg.org/whl/torch-2.5.0+cpu.html
+pip install MDAnalysis
+```
 
 
 ## LAMMPS
