@@ -59,7 +59,8 @@ bash
 cd lammps
 mkdir build
 cd build
-cmake -DPKG_RIGID=yes -DPKG_SPH=yes -DPKG_EXTRA_DUMP=yes  -DBUILD_MPI=yes  -DBUILD_OMP=yes ../cmake/ -DCMAKE_PREFIX_PATH=/path/to/libtorch 
+cmake -DPKG_RIGID=yes -DPKG_SPH=yes -DPKG_EXTRA_DUMP=yes  -DBUILD_MPI=yes -DPKG_EXTRA-COMPUTE=yes -DBUILD_OMP=yes ../cmake/ -DCMAKE_PREFIX_PATH=/path/to/libtorch
+cmake --build .
 ```
 
 If you have PyTorch installed:
@@ -69,7 +70,8 @@ bash
 cd lammps
 mkdir build
 cd build
-cmake -DPKG_RIGID=yes -DPKG_SPH=yes -DPKG_EXTRA_DUMP=yes  -DBUILD_MPI=yes  -DBUILD_OMP=yes ../cmake/ -DCMAKE_PREFIX_PATH=`python -c 'import torch;print(torch.utils.cmake_prefix_path)'` 
+cmake -DPKG_RIGID=yes -DPKG_SPH=yes -DPKG_EXTRA-DUMP=yes -DPKG_EXTRA-COMPUTE=yes -DBUILD_MPI=yes  -DBUILD_OMP=yes ../cmake/ -DCMAKE_PREFIX_PATH=`python -c 'import torch;print(torch.utils.cmake_prefix_path)'`
+cmake --build .
 ```
 
 CMake will look for MKL. You may have to explicitly provide the path for your MKL installation (e.g. `-DMKL_INCLUDE_DIR=/usr/include/`).
