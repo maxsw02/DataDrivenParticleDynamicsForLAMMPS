@@ -93,7 +93,7 @@ if using plain Python and `pip`.
 ### Generating LAMMPS Input Files
 
 ```
-python main_compile.py --lammps ../lammps_sdpd_rand_only/jit_opt_build/lmp --lammps_setup lammps_setup_examples/ideal_gas_box/setup.in --lammps_sim_dir ig_sim --lmp_setup_data ig_init.data --lmp_entropy_data ig_entropy.data --metadata trained_models/taylor_green/args.json --params ../DataDrivenParticleDynamics/data/taylor_green/
+python main_compile.py --lammps ../lammps_sdpd_rand_only/jit_opt_build/lmp --lammps_setup lammps_setup_examples/ideal_gas_box/setup.in --lammps_sim_dir ig_sim --lmp_setup_data pre_entropy.data --lmp_entropy_data ig_entropy.data --metadata /path/to/metadata/ --params /path/to/params/file
 ```
 `main_compile.py` will take an existing `params.pt` that the user has already trained and compile it into three seperate JIT PyTorch models that can be used within LAMMPS. It produces 
 'model_jit_s.pt', `model_jit_w.pt`, and `model_jit.pt`, which are used to calculate the entropies, volumes, and the forces + dS, respectively. It will also generate a LAMMPS simulation directory containing a LAMMPS data file with the initial per-particle entropies calculated based on the user's LAMMPS setup file, three JIT models, `sdpd_exec.in`, which is a LAMMPS input script with the timestep and cutoff defined during the training of the model. The arguments for `main_compile.py` are as follows:
