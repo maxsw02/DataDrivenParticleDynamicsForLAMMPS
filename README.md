@@ -1,4 +1,4 @@
-This LAMMPS pair style allows you to use structure-preserving machine-learned framework for DPD simulations. 
+This LAMMPS pair style allows you to use structure-preserving machine-learned framework for coarse-grained simulations.
 
 ## Pre-requisites
 PyTorch or LibTorch == 2.2
