@@ -14,7 +14,7 @@ pip install mkl-include
 Can be installed using conda as well.
 
 Other packages/modules loaded/used:
-gcc-13.3
+gcc-13.3 or gcc-9
 openmpi-2.1.0
 
 ## Building LAMMPS
