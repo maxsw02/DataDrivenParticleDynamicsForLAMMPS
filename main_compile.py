@@ -14,7 +14,7 @@ def main(args):
     metadata = Namespace(**metadata)
 
     lammps_path = os.path.join(cwd,args.lammps_sim_dir)
-    lammps_data_file_pre_entropy = os.path.join(lammps_path,args.lmp_setup_data)
+    lammps_data_file_pre_entropy = os.path.join(cwd,args.lmp_setup_data)
     lammps_data_file_entropy = os.path.join(lammps_path,args.lmp_entropy_data)
     lammps_log_init_config_file = os.path.join(lammps_path,'log_init_config.lammps')
 
@@ -25,16 +25,20 @@ def main(args):
     os.system("{} -in {} > {}".format(args.lammps, args.lammps_setup, lammps_log_init_config_file))
     os.remove("log.lammps")
     print("LAMMPS is finished generating pre-entropy data file")
+    os.system("mv {} {}".format(lammps_data_file_pre_entropy, lammps_path))
+
     #os.system("mv pre_entropy.data {}".format(lammps_data_file_pre_entropy))
 
     #Save jitted models to LAMMPS simulation directory
+    
     jit_model =JITCompile(metadata,args.params, lammps_path,args.dims)
     jit_model.export_jit()
 
     #Calculate initial entropies from LAMMPS generated data file
     S_jit_model_path = os.path.join(lammps_path,'params_S_jit.pt')
     S_model =torch.jit.load(S_jit_model_path)
-    jit_model.calc_entropies(S_model, lammps_data_file_pre_entropy, metadata.h, lammps_data_file_entropy)
+    new_loc_pre_entropy_data_file = os.path.join(lammps_path, args.lmp_setup_data)
+    jit_model.calc_entropies(S_model, new_loc_pre_entropy_data_file, metadata.h, lammps_data_file_entropy)
 
     #Generates a lammps input that reads in data file with entropies and runs the simulation 
     #from the configuation of the data file. It will use the timestep and cutoff radius from 
