@@ -108,7 +108,7 @@ python main_compile.py --lammps /path/to/lammps/executable --lammps_setup /path/
 | `--metadata`                  | Location of the metadata of the training parameters                                                    | /path/to/metadata                                     |
 | `--params`                    | Location of trained PyTorch model that will be JIT compiled                                            | /path/to/params.pt                                    |    
 
-Guidelines to remember:
+###Guidelines to remember:
 
 Within your `--lmp_setup_data`, the user should generate initial configuration that is representative of your model's training data. For example, the initial velocities created should reflect that of the training data.
 
@@ -116,7 +116,13 @@ Make sure to use the SPH pairstyle, but please know that the column formatting i
 ```
 atom-id atom-type rho esph cv entropy x y z ix iy iz
 ```
+###Dependencies:
+```
+pip install torch==2.5.0 --index-url https://download.pytorch.org/whl/cpu
+pip install torch_geometric torch_scatter -f https://data.pyg.org/whl/torch-2.5.0+cpu.html
 
+pip install tidynamics MDAnalysis matplotlib
+```
 
 
 ## LAMMPS
