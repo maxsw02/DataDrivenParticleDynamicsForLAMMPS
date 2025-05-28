@@ -59,7 +59,7 @@ bash
 cd lammps
 mkdir build
 cd build
-cmake -DPKG_RIGID=yes -DPKG_SPH=yes -DPKG_EXTRA_DUMP=yes  -DBUILD_MPI=yes -DPKG_EXTRA-COMPUTE=yes -DBUILD_OMP=yes ../cmake/ -DCMAKE_PREFIX_PATH=/path/to/libtorch
+cmake -DPKG_RIGID=yes -DPKG_SPH=yes -DPKG_EXTRA-DUMP=yes  -DBUILD_MPI=yes -DPKG_EXTRA-COMPUTE=yes -DBUILD_OMP=yes ../cmake/ -DCMAKE_PREFIX_PATH=/path/to/libtorch
 cmake --build .
 ```
 
