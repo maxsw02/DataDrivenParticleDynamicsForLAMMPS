@@ -1,11 +1,9 @@
 This LAMMPS pair style allows you to use structure-preserving machine-learned framework for coarse-grained simulations.
 
 ## Pre-requisites
-PyTorch or LibTorch == 2.5.0
+LibTorch == 2.1.2
 
-Libtorch an be downloaded here: https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.5.0%2Bcpu.zip (Preferred method)
-
-Pytorch 2.5.0 can be installed using pip/conda: https://pytorch.org/get-started/previous-versions/
+Libtorch an be downloaded here: https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.1.2%2Bcpu.zip (Preferred method)
 
 MKL Package
 ```
