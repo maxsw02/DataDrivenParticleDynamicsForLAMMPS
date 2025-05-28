@@ -30,7 +30,7 @@ then
 fi
 # Check and produce nice message
 if [ ! -f pair_sdpd_ml.cpp ]; then
-    echo "Please run `patch_lammps.sh` from the `pair_sdpd_ml` root directory."
+    echo "Please run `patch_lammps.sh` from the sdpd_ml_pair directory."
     exit 1
 fi
 # Check for double-patch

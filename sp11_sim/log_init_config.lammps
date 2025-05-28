@@ -1,0 +1,24 @@
+--------------------------------------------------------------------------
+[[54167,1],0]: A high-performance Open MPI point-to-point messaging module
+was unable to find any relevant network interfaces:
+
+Module: OpenFabrics (openib)
+  Host: chestnut-login
+
+Another transport will be used instead, although this may result in
+lower performance.
+
+NOTE: You can disable this warning by setting the MCA parameter
+btl_base_warn_component_unused to 0.
+--------------------------------------------------------------------------
+LAMMPS (29 Aug 2024 - Update 2)
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (src/comm.cpp:98)
+  using 1 OpenMP thread(s) per MPI task
+Created orthogonal box = (0 0 0) to (30.18 30.18 30.18)
+  1 by 1 by 1 MPI processor grid
+Created 1000 atoms
+  using lattice units in orthogonal box = (0 0 0) to (30.18 30.18 30.18)
+  create_atoms CPU = 0.031 seconds
+System init for write_data ...
+WARNING: Communication cutoff is 0.0. No ghost atoms will be generated. Atoms may get lost. (src/comm_brick.cpp:212)
+Total wall time: 0:00:00

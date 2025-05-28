@@ -1,0 +1,29 @@
+variable        h equal 4.75     # pairstyle cutoff determined during ML training   
+variable        dt equal 0.025  # timestep
+variable 	eq_steps equal 10000 #equilibriation steps
+units lj              # Lennard-Jones units (dimensionless)
+atom_style sph     # Basic atomic style for particles
+dimension 3           # 3D simulation
+boundary p p p        # Periodic boundaries in all directions
+newton on
+read_data /mnt/io1/home/maxw2/github_repo_testing/DataDrivenParticleDynamicsForLAMMPS/sp11_sim/sp11_entropy.data
+compute          ent all property/atom entropy #calculate entropy_per_particle
+compute          dent all property/atom dentropy #calculate dentropy
+compute          entropy all reduce sum c_ent #calculate total entropy
+
+variable natoms equal atoms
+pair_style      sdpd/ml 8593
+pair_coeff      * * ${h} params_jit.pt params_W_jit.pt 
+fix              1 all sph/sdpd
+
+timestep         ${dt}
+
+comm_modify  vel yes #communicate velocities (NECCESSARY)
+thermo 10
+thermo_style  custom step temp pe ke etotal press c_entropy 
+run             ${eq_steps}
+
+dump    1       all custom 5 output_1n.xyz id x y z xu yu zu vx vy vz c_ent c_dent
+#dump_modify 1 sort id
+run  1000
+undump 1

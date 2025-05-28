@@ -20,7 +20,7 @@ import MDAnalysis as mda
 class JITCompile(object):
     def __init__(self, args, params_dir,lmp_dir, dims):
         self.args = args
-        self.data_dir = params_dir
+        self.params_file = params_dir
         self.output_dir = lmp_dir
 
         # Study Case
@@ -34,14 +34,14 @@ class JITCompile(object):
 
         # Net Parameters
         self.model = CG_model(args, self.dims).to(self.device).float()
-        checkpoint = torch.load(load_dir, map_location=self.device, weights_only=False)
+        checkpoint = torch.load(self.params_file, map_location=self.device, weights_only=False)
         self.model.load_state_dict(checkpoint)
 
 
     def export_jit(self):
         # Load parameters to JIT class
-        load_path = os.path.join(self.data_dir, 'params.pt')
-        checkpoint = torch.load(load_path, map_location=self.device)
+        #load_path = os.path.join(self.data_dir, 'params.pt')
+        checkpoint = torch.load(self.params_file, map_location=self.device, weights_only=False)
 
         self.model_S_jit = CG_model_S_jit(self.args, self.dims).to(self.device).float()
         self.model_S_jit.load_state_dict({k: v for k, v in checkpoint.items() if k.startswith('teacher.')})
