@@ -16,7 +16,7 @@ gcc-13.3 or gcc-9
 openmpi-2.1.0
 
 ## Building LAMMPS
-Currently this potential has only been tested for the latest LAMMPS version (19Nov2024).
+Currently this potential has only been tested for the latest LAMMPS version (29Aug2024).
 Could work for older versions, but not tested.
 Feel free to download the latest version of LAMMPS from their github page: https://github.com/lammps/lammps.
 Or use the provided patched version of LAMMPS in this repository/directory.
