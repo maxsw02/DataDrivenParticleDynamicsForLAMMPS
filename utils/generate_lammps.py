@@ -42,7 +42,7 @@ dump    1       all custom 5 output_1n.xyz id x y z xu yu zu vx vy vz c_ent c_de
 #dump_modify 1 sort id
 run  1000
 undump 1""".format(cutoff, timestep , data_file,np.random.randint(0, high=10000)) 
-    path = os.path.join(output_dir,'sdpd_exec.in')
+    path = os.path.join(output_dir,'ddpd_exec.in')
     with open(path, "w") as f:
         f.write(input1)
 
