@@ -122,8 +122,8 @@ atom-id atom-type rho esph cv entropy x y z ix iy iz
 ```
 ### Dependencies:
 ```
-pip install torch==2.5.0 --index-url https://download.pytorch.org/whl/cpu
-pip install torch_geometric torch_scatter -f https://data.pyg.org/whl/torch-2.5.0+cpu.html
+pip install torch==2.4.0 --index-url https://download.pytorch.org/whl/cpu
+pip install torch_geometric torch_scatter -f https://data.pyg.org/whl/torch-2.4.0+cpu.html
 pip install MDAnalysis
 ```
 *Note that the PyTorch(2.1.2) and LibTorch(2.5.0) versions are different.
