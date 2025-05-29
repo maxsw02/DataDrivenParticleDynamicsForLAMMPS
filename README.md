@@ -131,7 +131,7 @@ pip install MDAnalysis
 
 ## LAMMPS Input File
 ```
-pair_style	sdpd/ml <random_seed>
+pair_style	ddpd/ml <random_seed>
 pair_coeff	* * <cutoff> model_jit_W.pt model_jit.pt
 ```
 If you use `main_compile.py`, then the `<cutoff>` is already defined by your training metadata and `<random_seed>` is generated using `numpy`.
