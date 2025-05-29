@@ -355,7 +355,6 @@ using namespace std;
   if (atom->nmax > nmax) {
     memory->destroy(d);
     nmax = atom->nmax;
-    assert(nmax == ntotal);
     memory->create(d,nmax,"pair:d");
   }
 
