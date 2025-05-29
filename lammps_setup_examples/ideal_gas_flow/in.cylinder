@@ -17,10 +17,10 @@ group   group_fluid region out_cylinder
 group	solid region cylinder_reg
 
 
-pair_style hybrid/overlay sdpd/ml 384038 soft 0.05
-pair_coeff      * * sdpd/ml ${cutoff} params_jit.pt params_W_jit.pt
+pair_style hybrid/overlay ddpd/ml 384038 soft 0.05
+pair_coeff      * * ddpd/ml ${cutoff} params_jit.pt params_W_jit.pt
 pair_coeff	2 1 soft 10.0 
-fix              1 all sph/sdpd
+fix              1 all sph/ddpd
 
 variable     fy atom mass*7.5
 fix          body_force group_fluid addforce 0.0 v_fy 0.0

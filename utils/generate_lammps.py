@@ -27,9 +27,9 @@ compute          dent all property/atom dentropy #calculate dentropy
 compute          entropy all reduce sum c_ent #calculate total entropy
 
 variable natoms equal atoms
-pair_style      sdpd/ml {}
+pair_style      ddpd/ml {}
 pair_coeff      * * ${{h}} params_jit.pt params_W_jit.pt 
-fix              1 all sph/sdpd
+fix              1 all sph/ddpd
 
 timestep         ${{dt}}
 
