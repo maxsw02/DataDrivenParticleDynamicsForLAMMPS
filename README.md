@@ -1,15 +1,15 @@
-This LAMMPS pair style allows you to use structure-preserving machine-learned framework for coarse-grained simulations.
+This LAMMPS pair style enables the use of a structure-preserving machine-learned framework for coarse-grained simulations.
 
 ## Pre-requisites
 LibTorch == 2.1.2
 
-Libtorch an be downloaded here: https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.1.2%2Bcpu.zip (Preferred method)
+Libtorch can be downloaded here: https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.1.2%2Bcpu.zip (Preferred method)
 
 MKL Package
 ```
 pip install mkl-include
 ```
-Can be installed using conda as well.
+It can be installed using conda as well.
 
 Other packages/modules loaded/used:
 gcc-13.3 or gcc-9
@@ -126,6 +126,7 @@ pip install torch==2.5.0 --index-url https://download.pytorch.org/whl/cpu
 pip install torch_geometric torch_scatter -f https://data.pyg.org/whl/torch-2.5.0+cpu.html
 pip install MDAnalysis
 ```
+*Note that the PyTorch(2.1.2) and LibTorch(2.5.0) versions are different.
 
 ## LAMMPS Input File
 ```
