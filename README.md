@@ -103,6 +103,7 @@ python main_compile.py --lammps /path/to/lammps/executable --lammps_setup /path/
 | `--lammps_sim_dir`            | LAMMPS folder to perform simulations with sdpd/ml pair style; will be made unless it exists            | /path/to/directory/                                   |
 | `--lmp_setup_data`            | Name of LAMMPS data file that is produced by the `--lammps_setup` input file                           | name of LAMMPS data file                              |
 | `--lmp_entropy_data`          | Name of LAMMPS data file after the entropy calculation is performed                                    | name of LAMMPS data file                              |
+| `--lmp_custom_input`          | Location of custom LAMMPS input file (ddpd_exec.in will not be generated)                              | /path/to/custom/input/file                            |
 | `--metadata`                  | Location of the metadata of the training parameters                                                    | /path/to/metadata                                     |
 | `--params`                    | Location of trained PyTorch model that will be JIT compiled                                            | /path/to/params.pt                                    |    
 
