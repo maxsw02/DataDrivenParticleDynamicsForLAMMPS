@@ -18,7 +18,7 @@
     references: Espanol and Revenga, Phys Rev E 67, 026705 (2003)
 ------------------------------------------------------------------------- */
 
-#include "pair_sdpd_ml.h"
+#include "pair_ddpd_ml.h"
 
 #include "atom.h"
 #include "comm.h"
@@ -57,7 +57,7 @@ using namespace LAMMPS_NS;
 using namespace std;
 
 /* ---------------------------------------------------------------------- */
- PairSDPDML::PairSDPDML(LAMMPS *lmp): Pair (lmp)
+ PairDDPDML::PairDDPDML(LAMMPS *lmp): Pair (lmp)
 { restartinfo = 0;
   manybody_flag = 1;  
   nmax = 0;
@@ -82,17 +82,17 @@ using namespace std;
 
   if (const char *env_p = std::getenv("DEBUG_MODE")) {
     if (comm->me == 0){
-    std::cout << "PairSDPDML is in DEBUG mode, since DEBUG is in env\n";}
+    std::cout << "PairDDPDML is in DEBUG mode, since DEBUG is in env\n";}
     debug_mode = 1;
   }
     if (comm->me == 0)
-    std::cout << "SDPD/ML is using input precision double " << 
+    std::cout << "ddpd/ml is using input precision double " << 
            " and output precision float" << std::endl;
 }
 
 /* ---------------------------------------------------------------------- */
 
- PairSDPDML::~PairSDPDML() {
+ PairDDPDML::~PairDDPDML() {
   if (copymode) return;
   memory->destroy(d);
   if (allocated) {
@@ -110,7 +110,7 @@ using namespace std;
 
 /* ---------------------------------------------------------------------- */
 
- void PairSDPDML::compute (int eflag, int vflag) {
+ void PairDDPDML::compute (int eflag, int vflag) {
 
   ev_init(eflag, vflag);
   int i, j , jnum, itype, jtype;
@@ -195,7 +195,7 @@ using namespace std;
  allocate all arrays
  ------------------------------------------------------------------------- */
 
- void PairSDPDML::allocate () {
+ void PairDDPDML::allocate () {
   allocated = 1;
   int n = atom->ntypes;
   //std::cout << "ntypes = " << n << "\n";
@@ -217,7 +217,7 @@ using namespace std;
  global settings
  ------------------------------------------------------------------------- */
 
- void PairSDPDML::settings (int narg, char **arg) {
+ void PairDDPDML::settings (int narg, char **arg) {
   //std::cout << narg << "\n";
   if (narg != 1) error->all(FLERR, "Illegal pair_style command, too many arguments");
 
@@ -233,7 +233,7 @@ using namespace std;
  set coeffs for one or more type pairs
  ------------------------------------------------------------------------- */
 
- void PairSDPDML::coeff (int narg, char **arg) {
+ void PairDDPDML::coeff (int narg, char **arg) {
   
   if (!allocated) allocate();
   int ntypes = atom->ntypes;
@@ -269,22 +269,15 @@ using namespace std;
 
   if (count == 0 && comm->me == 0){error->all(FLERR,"Incorrect args for pair coefficients");}
 
-  //model_path = std::string(arg[3]); //entire model
-  //model_T_path = std::string(arg[4]); //teacher model to get entropy for first step
-  //model_W_path = std::string(arg[5]); //model to get W
   model = torch::jit::load(std::string(arg[3]), device);
   modelW = torch::jit::load(std::string(arg[4]), device);
-  //modelT = torch::jit::load(std::string(arg[4]), device);
   model.eval();
   modelW.eval();
-  //modelT.eval();
-  if (comm->me == 0) {std::cout << "SDPD/ML: Freezing TorchScript model... "<<std::endl;
-  std::cout << "SDPD/ML: Freezing TorchScript model W..." <<std::endl;
-  //std::cout << "SDPD/ML: Freezing TorchScript model T..." <<std::endl;
+  if (comm->me == 0) {std::cout << "DDPD/ML: Freezing TorchScript model... "<<std::endl;
+  std::cout << "DDPD/ML: Freezing TorchScript model W..." <<std::endl;
   }
   model = torch::jit::freeze(model);
   modelW = torch::jit::freeze(modelW);
-  //modelT = torch::jit::freeze(modelT);
   torch::jit::FusionStrategy strategy = {{torch::jit::FusionBehavior::DYNAMIC, 5}};
   torch::jit::setFusionStrategy(strategy);
 
@@ -296,31 +289,29 @@ using namespace std;
 /* ----------------------------------------------------------------------
  init specific to this pair style
 ------------------------------------------------------------------------ */
- void PairSDPDML::init_style()
+ void PairDDPDML::init_style()
 {
   first_flag = 0;
 
   if ((!atom->dentropy_flag) || (atom->dentropy == nullptr))
-    error->all(FLERR,"Pair style sdpd/ml requires atom attributes entropy and dentropy");
+    error->all(FLERR,"Pair style ddpd/ml requires atom attributes entropy and dentropy");
 
   neighbor->add_request(this, NeighConst::REQ_FULL | NeighConst::REQ_GHOST);
   
-  if (atom->tag_enable == 0) error->all(FLERR,"Pair style SDPD/ML requires atom IDs");
-  //if (force->newton_pair == 0) error->all(FLERR, "Pair style SDPD/ML requires newton pair on");
+  if (atom->tag_enable == 0) error->all(FLERR,"Pair style ddpd/ml requires atom IDs");
 } 
 
 /* ----------------------------------------------------------------------
  init for one type pair i,j and corresponding j,i
  ------------------------------------------------------------------------- */
 
- double PairSDPDML::init_one (int i, int j) {
+ double PairDDPDML::init_one (int i, int j) {
   if (setflag[i][j] == 0)
-    error->all(FLERR,"Not all pair sdpd/ML coeffs are set");
+    error->all(FLERR,"Not all pair ddpd/ml coeffs are set");
   return self_cut;
 }
 
- c10::Dict<std::string, torch::Tensor> PairSDPDML::preprocess() {
-  //double wiener[3][3],sym_wiener[3][3], f_random[3], f_rand[3];
+ c10::Dict<std::string, torch::Tensor> PairDDPDML::preprocess() {
   double trace;
   // Atom positions, including ghost atoms
   double **x = atom->x;
@@ -389,14 +380,10 @@ int nedges = 0; //local number of edges for d and S
   }  
   cumsum_neigh_per_atom.clear();
   cumsum_neigh_per_atom.resize(inum,0);
-  //std::vector<int> cumsum_neigh_per_atom_tot(ntotal);
-  //std::cout << "neigh_per_atom: " << neigh_per_atom << "\n";
   for (int ii = 1; ii < inum; ii++) {
     cumsum_neigh_per_atom[ii] = cumsum_neigh_per_atom[ii - 1] + neigh_per_atom[ii - 1];
   }
-  //for (int ii = 1; ii < ntotal; ii++) {
-  //  cumsum_neigh_per_atom_tot[ii] = cumsum_neigh_per_atom_tot[ii - 1] + neigh_per_atom_tot[ii - 1];
-  //}
+
 
   if (debug_mode){ std::cout << "nedges: " << nedges  << "\n";}
 
@@ -408,14 +395,10 @@ int nedges = 0; //local number of edges for d and S
   auto dw = dW_ij.accessor<float, 3>();
   auto dV = dV_ij.accessor<float, 2>();
   
-  //torch::Tensor v_ij_tensor = torch::zeros({nedges, 3}, device);
-  //torch::Tensor S_tensor = torch::ones({nlocal,1}, device);
 
   auto vel = v_tensor.accessor<float, 2>();
   auto edges = edges_tensor.accessor<long, 2>();
   auto r_ij = r_ij_tensor.accessor<float, 2>();
-  //auto s_all = S_tensor.accessor<float, 2>();
-  //auto v_ij = v_ij_tensor.accessor<float, 2>();
 
   torch::Tensor S_2  = torch::ones({ntotal,1}, device);
   torch::Tensor d_tot = torch::zeros({ntotal,1}, device);
@@ -473,9 +456,6 @@ int edge_counter = 0;
         dw[edge_counter][1][0] = random->gaussian(0.0,1.0);
         dV[edge_counter][0] = random->gaussian(0.0,1.0);
 
-        //edge_map[UnorderedPair(i, j)] = pair_index;
-        //if (debug_mode) std::cout << "edge_map " << i << " " << j << " " << "\n";
-
         edge_counter++;
       }
       }
@@ -491,18 +471,12 @@ int edge_counter = 0;
 
   torch::Tensor d_tensor = modelW.forward(inputW_vector).toTensor();
   auto d_acc= d_tensor.accessor<float, 2>();
-  //if (debug_mode){
-  //  std::cout << "W_model output:\n";
-  //  torch::Tensor d_slice = d_tensor.index({torch::indexing::Slice(0, nlocal)});
-  //  std::cout << d_slice << "\n";
- // }
 
 //#pragma omp parallel
   for (int ii = 0; ii < inum; ii++) {
       int i = ilist[ii];
       d[i] = d_acc[i][0];
     }
-//if (newton_pair) comm->reverse_comm(this);
 comm->forward_comm(this); //Communicate d and S to all atoms
 
 //#pragma omp parallel
@@ -520,7 +494,6 @@ model_inputs.insert("S", S_2);
 model_inputs.insert("d", d_tot);
 model_inputs.insert("dW", dW_ij);
 model_inputs.insert("dV", dV_ij);
-//c10::Dict<std::string, torch::Tensor> in;
 
 if(debug_mode && comm->me == 0){
   std::cout << "model input:\n";
@@ -534,7 +507,7 @@ if(debug_mode && comm->me == 0){
   return model_inputs;
 }
 
-void *PairSDPDML::extract_peratom(const char *str, int &ncol)
+void *PairDDPDML::extract_peratom(const char *str, int &ncol)
 {
   if (strcmp(str,"d") == 0) {
     ncol = 0;
@@ -544,7 +517,7 @@ void *PairSDPDML::extract_peratom(const char *str, int &ncol)
   return nullptr;
 }
 
-int PairSDPDML::pack_forward_comm(int n, int *list, double *buf, int /*pbc_flag*/, int * /*pbc*/)
+int PairDDPDML::pack_forward_comm(int n, int *list, double *buf, int /*pbc_flag*/, int * /*pbc*/)
 {
   int i,j,m;  
   double *entropy = atom->entropy;
@@ -558,7 +531,7 @@ int PairSDPDML::pack_forward_comm(int n, int *list, double *buf, int /*pbc_flag*
   return m;
 }
 
-void PairSDPDML::unpack_forward_comm(int n, int first, double *buf)
+void PairDDPDML::unpack_forward_comm(int n, int first, double *buf)
 {
   int i,m,last;
   double *entropy = atom->entropy;
@@ -571,7 +544,7 @@ void PairSDPDML::unpack_forward_comm(int n, int first, double *buf)
     d[i] = buf[m++];}
 }
 
-double PairSDPDML::memory_usage()
+double PairDDPDML::memory_usage()
 {
   int n = atom->ntypes;
   int nall = atom->natoms;
@@ -582,7 +555,5 @@ double PairSDPDML::memory_usage()
   bytes += 0.5 * nall * (nall+1) * sizeof(double);
   bytes += 2 * 3 * 3 * sizeof(double);
   bytes += 3  * sizeof(double);
-  //bytes += (double)maxvatom*6 * sizeof(double);
-  //bytes += 
   return bytes;
 }

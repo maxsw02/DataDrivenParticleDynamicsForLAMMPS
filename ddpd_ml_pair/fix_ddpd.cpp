@@ -12,7 +12,7 @@
  See the README file in the top-level LAMMPS directory.
  ------------------------------------------------------------------------- */
 
-#include "fix_sdpd.h"
+#include "fix_ddpd.h"
 #include "atom.h"
 #include "force.h"
 #include "update.h"
@@ -25,7 +25,7 @@ using namespace FixConst;
 
 /* ---------------------------------------------------------------------- */
 
-FixSDPD::FixSDPD(LAMMPS *lmp, int narg, char **arg) :
+FixDDPD::FixDDPD(LAMMPS *lmp, int narg, char **arg) :
   Fix(lmp, narg, arg) {
 
   if ((atom->esph_flag != 1) || (atom->rho_flag != 1))
@@ -40,7 +40,7 @@ FixSDPD::FixSDPD(LAMMPS *lmp, int narg, char **arg) :
 
 /* ---------------------------------------------------------------------- */
 
-int FixSDPD::setmask() {
+int FixDDPD::setmask() {
   int mask = 0;
   mask |= INITIAL_INTEGRATE;
   mask |= FINAL_INTEGRATE;
@@ -50,7 +50,7 @@ int FixSDPD::setmask() {
 
 /* ---------------------------------------------------------------------- */
 
-void FixSDPD::init() {
+void FixDDPD::init() {
   dtv = update->dt;
   dtf = dtv * force->ftm2v; 
   //dtv = update->dt;
@@ -61,7 +61,7 @@ void FixSDPD::init() {
  allow for both per-type and per-atom mass
  ------------------------------------------------------------------------- */
 
-void FixSDPD::initial_integrate(int /*vflag*/) {
+void FixDDPD::initial_integrate(int /*vflag*/) {
   // update v and x and rho and e of atoms in group
 
   double **x = atom->x;
@@ -95,36 +95,26 @@ void FixSDPD::initial_integrate(int /*vflag*/) {
       v[i][1] +=  dtfm * f[i][1];
       v[i][2] += dtfm * f[i][2];
 
-      //std::cout << "f[i][0] " << f[i][0] << "\n";
-      //std::cout << "f[i][1] " << f[i][1] << "\n";
-      //std::cout << "f[i][2] " << f[i][2] << "\n"; 
-
       x[i][0] += dtv * v[i][0];
       x[i][1] += dtv * v[i][1];
       x[i][2] += dtv * v[i][2];
 
       entropy[i] += dtv * dentropy[i];
-
-      //std::cout << "dentropy[i] " << dentropy[i] << "\n";
-      //std::cout << "dentropy "<< i <<" : " << dentropy[i] << "\n";
     }
   }
 }
 
 /* ---------------------------------------------------------------------- */
 
-void FixSDPD::final_integrate() {
+void FixDDPD::final_integrate() {
 
 }
 
 /* ---------------------------------------------------------------------- */
 
-void FixSDPD::reset_dt() {
+void FixDDPD::reset_dt() {
   dtv = update->dt;
   dtf = dtv * force->ftm2v;
   std::cout << "dtf: " << dtf << "\n";
   std::cout << "dtv: " << dtv << "\n";
-  //dt2 = std::sqrt(dtv); 
-  //dtv = update->dt;
-  //dtf = 0.5 * update->dt * force->ftm2v;
 }

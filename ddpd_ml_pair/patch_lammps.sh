@@ -29,8 +29,8 @@ then
     exit 1
 fi
 # Check and produce nice message
-if [ ! -f pair_sdpd_ml.cpp ]; then
-    echo "Please run `patch_lammps.sh` from the sdpd_ml_pair directory."
+if [ ! -f pair_ddpd_ml.cpp ]; then
+    echo "Please run `patch_lammps.sh` from the ddpd_ml_pair directory."
     exit 1
 fi
 # Check for double-patch
@@ -51,7 +51,7 @@ then
     ln -s `realpath -s set.cpp` $lammps_dir/src/set.cpp    
     ln -s `realpath -s atom_vec_sph.h` $lammps_dir/src/SPH/atom_vec_sph.h
     ln -s `realpath -s atom_vec_sph.cpp` $lammps_dir/src/SPH/atom_vec_sph.cpp
-    for file in *sdpd*; do
+    for file in *ddpd*; do
         ln -s `realpath -s $file` $lammps_dir/src/SPH/$file
     done
 else
@@ -62,7 +62,7 @@ else
     cp set.cpp $lammps_dir/src/set.cpp
     cp atom_vec_sph.h $lammps_dir/src/SPH/atom_vec_sph.h
     cp atom_vec_sph.cpp $lammps_dir/src/SPH/atom_vec_sph.cpp
-    for file in *sdpd*; do
+    for file in *ddpd*; do
         cp $file $lammps_dir/src/SPH/$file
     done
 fi

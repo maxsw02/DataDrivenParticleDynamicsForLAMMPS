@@ -13,23 +13,22 @@
 
 #ifdef FIX_CLASS
 // clang-format off
-FixStyle(sph/sdpd,FixSDPD);
+FixStyle(sph/ddpd,FixDDPD);
 // clang-format on
 #else
 
-#ifndef LMP_FIX_SPH_SDPD_H
-#define LMP_FIX_SPH_SDPD_H
+#ifndef LMP_FIX_SPH_DDPD_H
+#define LMP_FIX_SPH_DDPD_H
 
 #include "fix.h"
 
 namespace LAMMPS_NS {
 
-class FixSDPD : public Fix {
+class FixDDPD : public Fix {
  public:
-  FixSDPD(class LAMMPS *, int, char **);
+  FixDDPD(class LAMMPS *, int, char **);
   int setmask() override;
   void init() override;
-  //void setup_pre_force(int) override;
   void initial_integrate(int) override;
   void final_integrate() override;
   void reset_dt() override;
@@ -38,7 +37,6 @@ class FixSDPD : public Fix {
   class NeighList *list;
 
  protected:
-  //double dtv, dtf;
   double dtv, dtf;
   double *step_respa;
   int mass_require;
@@ -46,7 +44,7 @@ class FixSDPD : public Fix {
   class Pair *pair;
 };
 
-}    // namespace LAMMPS_NS
+} 
 
 #endif
 #endif

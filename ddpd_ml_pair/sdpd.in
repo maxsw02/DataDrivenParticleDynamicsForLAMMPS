@@ -31,12 +31,12 @@ velocity all create ${tempe} 4928 dist gaussian
 set 		region box sph/entropy ${s_per}
 variable natoms equal atoms
 
-pair_style      sdpd/ml
+pair_style      ddpd/ml
 #pair_coeff      * * ${h} ../../params_lammps.pt
 pair_coeff      * * ${h} params_jit.pt
 
 
-fix              1 all sph/sdpd
+fix              1 all sph/ddpd
 neighbor 1.0 bin
 neigh_modify delay 5 every 1
 
