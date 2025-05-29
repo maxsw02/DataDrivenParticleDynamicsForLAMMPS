@@ -13,11 +13,11 @@
 
 #ifdef PAIR_CLASS
 // clang-format off
-PairStyle(sdpd/ml,PairSDPDML);
+PairStyle(ddpd/ml,PairDDPDML);
 #else
 
-#ifndef LMP_PAIR_SDPD_IDEAL
-#define LMP_PAIR_SDPD_IDEAL
+#ifndef LMP_PAIR_DDPD_ML
+#define LMP_PAIR_DDPD_ML
 
 #include "pair.h"
 #include <torch/torch.h>
@@ -34,11 +34,11 @@ PairStyle(sdpd/ml,PairSDPDML);
 namespace LAMMPS_NS {
 
 //template<Precision precision>
-class PairSDPDML : public Pair {
+class PairDDPDML : public Pair {
  public:
   int first_flag;
-  PairSDPDML(class LAMMPS *);
-  ~PairSDPDML() override;
+  PairDDPDML(class LAMMPS *);
+  ~PairDDPDML() override;
   void compute(int, int) override;
   void settings(int, char **) override;
   void coeff(int, char **) override;
@@ -59,10 +59,6 @@ class PairSDPDML : public Pair {
 
   torch::jit::Module model;
   torch::jit::Module modelW;
-  //torch::jit::Module modelT;
-
-  //std::unique_ptr<torch::inductor::AOTIModelPackageLoader> T_model;
-  //std::unique_ptr<torch::inductor::AOTIModelPackageLoader> W_model;
 
  protected:
   double **cut;
@@ -73,7 +69,7 @@ class PairSDPDML : public Pair {
   double *d = nullptr;
   bool *pair_check;
 
-
+   
    unsigned int seed;
    class RanMars *random;
    int debug_mode = 0;

@@ -6,7 +6,7 @@ atom_style sph     # Basic atomic style for particles
 dimension 3           # 3D simulation
 boundary p p p        # Periodic boundaries in all directions
 newton on
-read_data /mnt/io1/home/maxw2/github_repo_testing/DataDrivenParticleDynamicsForLAMMPS/sp11_sim/sp11_entropy.data
+read_data  sp11_entropy.data
 compute          ent all property/atom entropy #calculate entropy_per_particle
 compute          dent all property/atom dentropy #calculate dentropy
 compute          entropy all reduce sum c_ent #calculate total entropy
