@@ -107,7 +107,7 @@ python main_compile.py --lammps /path/to/lammps/executable --lammps_setup /path/
 | `--params`                    | Location of trained PyTorch model that will be JIT compiled                                            | /path/to/params.pt                                    |    
 
 
-As an example, the following command can be used to generate the `sp11_sim` directory:
+As an example, the following command can be used to generate the `sp11_sim` directory (note that we are compiling the pre-trained star polymer 11 dataset that comes with this package):
 ```
 python main_compile.py --lammps /path/to/lmp/executable --lammps_setup lammps_setup_examples/lammps_star_polymer11/sp11_setup.in --lammps_sim_dir sp11_sim --lmp_setup_data pre_entropy.data --lmp_entropy_data sp11_entropy.data --metadata trained_models/star_polymer_11/args.json --params training_data/star_polymer_11/params.pt
 ```
@@ -116,7 +116,7 @@ python main_compile.py --lammps /path/to/lmp/executable --lammps_setup lammps_se
 
 Within your `--lmp_setup_data`, the user should generate initial configuration that is representative of your model's training data. For example, the initial velocities created should reflect that of the training data.
 
-Make sure to use the SPH pairstyle, but please know that the column formatting in the LAMMPS data files is altered after patching with LAMMPS with `sdpd/ml` pair style because of the additional per-particle entropy. This is the current column formatting: 
+Make sure to use the SPH atom style, but please know that the column formatting in the LAMMPS data files is altered after patching with LAMMPS with `sdpd/ml` pair style because of the additional per-particle entropy. This is the current column formatting: 
 ```
 atom-id atom-type rho esph cv entropy x y z ix iy iz
 ```
