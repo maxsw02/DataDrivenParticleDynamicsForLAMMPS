@@ -58,7 +58,7 @@ if __name__ == "__main__":
     parser.add_argument('--lammps_sim_dir', default='lmp_sim', type=str, help='LAMMPS simulation directory')
     parser.add_argument('--lmp_setup_data', default='pre_entropy.data', type=str, help='name of LAMMPS data file of user defined initial conditions') #This will be produced by this executable
     parser.add_argument('--lmp_entropy_data', default='lmp_entropy.data', type=str, help='name of LAMMPS data file of user defined initial conditions with calculated entropies')#This will be produced by this executable
-    parser.add_argument('--lmp_custom_input', default=None, type=str, help='If user wants to run the simulaton with a their own LAMMPS parameters, then sdpd_exec.in file will not be generated')#This will be produced by this executable
+    parser.add_argument('--lmp_custom_input', default=None, type=str, help='If user wants to run the simulaton with a their own LAMMPS parameters, then sdpd_exec.in file will not be generated')
 
     #Metadata from training i.e. cutoff radius, timestep, etc.
     parser.add_argument('--metadata', default='args.json', type=str, help='location of metadata file')

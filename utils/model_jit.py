@@ -3,7 +3,7 @@
 import torch
 from torch import Tensor
 import torch.nn as nn
-from torch_scatter import scatter_add, scatter_mean
+from .scatter import scatter_add, scatter_mean
 from torch_geometric.utils import softmax
 import torch.nn.functional as F
 from typing import Optional, List, Dict

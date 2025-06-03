@@ -10,9 +10,9 @@ import json
 from .generate_lammps import get_edges, write_lammps_data_from_numpy, generate_exec_files
 
 from .model import CG_model
-from .model_jit_optim import CG_model_jit
-from .model_jit_optim import CG_model_S_jit
-from .model_jit_optim import CG_model_W_jit
+from .model_jit import CG_model_jit
+from .model_jit import CG_model_S_jit
+from .model_jit import CG_model_W_jit
 
 import MDAnalysis as mda
 
