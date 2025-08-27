@@ -34,12 +34,12 @@ This step is to ensure that LAMMPS C++ code and Pytorch  C++ codes are recognizi
 #### Manually
 First copy the source files of the pair style:
 ```bash
-cp /path/to/sdpd_ml_pair/atom_vec_sph.* /path/to/lammps/src/SPH
-cp /path/to/sdpd_ml_pair/fix_sdpd.* /path/to/lammps/src/USER-SPH
-cp /path/to/sdpd_ml_pair/pair_sdpd_ml.* /path/to/lammps/src/SPH
+cp /path/to/ddpd_ml_pair/atom_vec_sph.* /path/to/lammps/src/SPH
+cp /path/to/ddpd_ml_pair/fix_sdpd.* /path/to/lammps/src/USER-SPH
+cp /path/to/ddpd_ml_pair/pair_sdpd_ml.* /path/to/lammps/src/SPH
 
-cp /path/to/sdpd_ml_pair/set.* /path/to/lammps/src/
-cp /path/to/sdpd_ml_pair/atom.* /path/to/lammps/src/
+cp /path/to/ddpd_ml_pair/set.* /path/to/lammps/src/
+cp /path/to/ddpd_ml_pair/atom.* /path/to/lammps/src/
 
 ```
 Then make the following modifications to `lammps/cmake/CMakeLists.txt`:
