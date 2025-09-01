@@ -27,7 +27,7 @@ Or use the provided patched version of LAMMPS in this repository/directory.
 
 From this directory run: 
 ```bash
-./patch_lammps_sdpd.sh /path/to/lammps/
+./patch_lammps.sh /path/to/lammps/
 ```
 This step is to ensure that LAMMPS C++ code and Pytorch  C++ codes are recognizing one another.
 
