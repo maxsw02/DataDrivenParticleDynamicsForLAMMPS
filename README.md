@@ -35,8 +35,8 @@ This step is to ensure that LAMMPS C++ code and Pytorch  C++ codes are recognizi
 First copy the source files of the pair style:
 ```bash
 cp /path/to/ddpd_ml_pair/atom_vec_sph.* /path/to/lammps/src/SPH
-cp /path/to/ddpd_ml_pair/fix_sdpd.* /path/to/lammps/src/USER-SPH
-cp /path/to/ddpd_ml_pair/pair_sdpd_ml.* /path/to/lammps/src/SPH
+cp /path/to/ddpd_ml_pair/fix_ddpd.* /path/to/lammps/src/USER-SPH
+cp /path/to/ddpd_ml_pair/pair_ddpd_ml.* /path/to/lammps/src/SPH
 
 cp /path/to/ddpd_ml_pair/set.* /path/to/lammps/src/
 cp /path/to/ddpd_ml_pair/atom.* /path/to/lammps/src/
@@ -94,13 +94,13 @@ if using plain Python and `pip`.
 python main_compile.py --lammps /path/to/lammps/executable --lammps_setup /path/to/lammps/setup/input/file --lammps_sim_dir /path/to/lammps/sim/ --lmp_setup_data pre_entropy.data --lmp_entropy_data ig_entropy.data --metadata /path/to/metadata/ --params /path/to/params/file
 ```
 `main_compile.py` will take an existing `params.pt` that the user has already trained and compile it into three seperate JIT PyTorch models that can be used within LAMMPS. It produces 
-'model_jit_s.pt', `model_jit_w.pt`, and `model_jit.pt`, which are used to calculate the entropies, volumes, and the forces + dS, respectively. It will also generate a LAMMPS simulation directory containing a LAMMPS data file with the initial per-particle entropies calculated based on the user's LAMMPS setup file, three JIT models, `sdpd_exec.in`, which is a LAMMPS input script with the timestep and cutoff defined during the training of the model. The arguments for `main_compile.py` are as follows:
+'model_jit_s.pt', `model_jit_w.pt`, and `model_jit.pt`, which are used to calculate the entropies, volumes, and the forces + dS, respectively. It will also generate a LAMMPS simulation directory containing a LAMMPS data file with the initial per-particle entropies calculated based on the user's LAMMPS setup file, three JIT models, `ddpd_exec.in`, which is a LAMMPS input script with the timestep and cutoff defined during the training of the model. The arguments for `main_compile.py` are as follows:
 
 |     Argument                  |             Description                                                                                | Options                                               |
 |-------------------------------| -------------------------------------------------------------------------------------------------------|------------------------------------------------------ |
 | `--lammps`                    | Location of LAMMPS binary                                                                              | /path/to/lammps/binary                                |
 | `--lammps_setup`              | LAMMPS file generates initial parameters                                                               | /path/to/lammps/input                                 | 
-| `--lammps_sim_dir`            | LAMMPS folder to perform simulations with sdpd/ml pair style; will be made unless it exists            | /path/to/directory/                                   |
+| `--lammps_sim_dir`            | LAMMPS folder to perform simulations with ddpd/ml pair style; will be made unless it exists            | /path/to/directory/                                   |
 | `--lmp_setup_data`            | Name of LAMMPS data file that is produced by the `--lammps_setup` input file                           | name of LAMMPS data file                              |
 | `--lmp_entropy_data`          | Name of LAMMPS data file after the entropy calculation is performed                                    | name of LAMMPS data file                              |
 | `--lmp_custom_input`          | Location of custom LAMMPS input file (ddpd_exec.in will not be generated)                              | /path/to/custom/input/file                            |
@@ -138,5 +138,5 @@ If you use `main_compile.py`, then the `<cutoff>` is already defined by your tra
 
 ## Full tutorial 
 
-To see a full walkthrough of training a model, compiling LAMMPS with `sdpd/ml` pairstyle, running LAMMPS with a trained model, check out the following link:
+To see a full walkthrough of training a model, compiling LAMMPS with `ddpd/ml` pairstyle, running LAMMPS with a trained model, check out the following link:
 https://colab.research.google.com/drive/1ZKeimm3Eeo_fF9WrPkzcCnFEj55xhkce?usp=sharing
